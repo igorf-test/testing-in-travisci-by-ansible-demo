@@ -38,3 +38,4 @@ script:
 
 '
 - sudo docker rm -f "$(cat ${container_id})"
+
