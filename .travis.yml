@@ -3,8 +3,6 @@ sudo: required
 env:
   - distribution: centos
     version: 7
-  - distribution: fedora
-    version: 24
   - distribution: ubuntu
     version: bionic
   - distribution: ubuntu
@@ -12,7 +10,7 @@ env:
 
 branches:
     only:
-        -master
+      - master
 
 services:
   - docker
