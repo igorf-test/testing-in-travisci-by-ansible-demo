@@ -1,1 +1,3 @@
 *.retry
+travis_key
+/.gitignore
