@@ -20,7 +20,7 @@ before_install:
   - eval "$(ssh-agent -s)"
   - chmod 600 /tmp/travis_key
   - ssh-add /tmp/travis_key
-  - ssh -o "StrictHostKeyChecking no" ansible@c1.m1 'ansible-playbook WORK/CI_CD/Ansible/playbook.yml'
+  - ssh -o "StrictHostKeyChecking no" ansible@18.133.241.81 'ansible-playbook WORK/CI_CD/Ansible/playbook.yml'
   - 'sudo docker pull ${distribution}:${version}'
   - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
 
