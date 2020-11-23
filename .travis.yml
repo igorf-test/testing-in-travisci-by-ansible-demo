@@ -1,14 +1,10 @@
 ---
 sudo: required
 env:
-  - distribution: centos
-    version: 7
-  - distribution: ubuntu
-    version: bionic
-  - distribution: ubuntu
-    version: trusty
   global:
     - ARTIFACT_NAME="testing-in-travisci-by-ansible.tz"
+  - distribution: ubuntu
+    version: trusty
 
 branches:
     only:
