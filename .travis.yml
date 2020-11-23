@@ -3,8 +3,9 @@ sudo: required
 env:
   global:
     - ARTIFACT_NAME="testing-in-travisci-by-ansible.tz"
-  - distribution: ubuntu
-    version: trusty
+  jobs:
+    - distribution: ubuntu
+      version: trusty
 
 branches:
     only:
