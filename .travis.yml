@@ -15,16 +15,6 @@ branches:
 services:
   - docker
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_3f2dabfde256_key -iv $encrypted_3f2dabfde256_iv -in travis_key.enc -out /tmp/travis_key -d
-  - eval "$(ssh-agent -s)"
-  - chmod 600 /tmp/travis_key
-  - ssh-add /tmp/travis_key
-  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "ping" playbook.yml'
-  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "set_vars, clone_gitrepo" playbook.yml'
-  - 'sudo docker pull ${distribution}:${version}'
-  - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
-
 script:
   - container_id=$(mktemp)
   - 'sudo docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/nginx_role:ro ${distribution}-${version}:ansible > "${container_id}"'
@@ -36,4 +26,14 @@ script:
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
   - 'sudo docker rm -f "$(cat ${container_id})"'
+
+after_script:
+  - openssl aes-256-cbc -K $encrypted_3f2dabfde256_key -iv $encrypted_3f2dabfde256_iv -in travis_key.enc -out /tmp/travis_key -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/travis_key
+  - ssh-add /tmp/travis_key
+  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "ping" playbook.yml'
+  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "set_vars, clone_gitrepo" playbook.yml'
+  - 'sudo docker pull ${distribution}:${version}'
+  - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
 
