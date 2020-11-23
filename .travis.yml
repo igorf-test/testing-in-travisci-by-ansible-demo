@@ -7,6 +7,8 @@ env:
     version: bionic
   - distribution: ubuntu
     version: trusty
+  global:
+    - ARTIFACT_NAME="testing-in-travisci-by-ansible.tz"
 
 branches:
     only:
@@ -38,4 +40,16 @@ script:
 after_script:
   - ssh -o "StrictHostKeyChecking no" ansible@3.10.209.77 'ansible-playbook -i hosts.yml --tags "ping" playbook.yml'
   - ssh -o "StrictHostKeyChecking no" ansible@3.10.209.77 'ansible-playbook -i hosts.yml --tags "set_vars, clone_gitrepo" playbook.yml'
+
+before_deploy:
+  - mkdir -p tmp && tar -czvf "tmp/$ARTIFACT_NAME" . --exclude ".git" --exclude "tmp"
+  - . ./tmp/tagrelease.sh
+
+deploy:
+  - provider: releases
+    api_key: "$GITHUB_OAUTH_TOKEN"
+    file: "tmp/$ARTIFACT_NAME"
+    skip_cleanup: true
+    on:
+      branch: master
 
