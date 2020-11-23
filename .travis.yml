@@ -20,8 +20,8 @@ before_install:
   - eval "$(ssh-agent -s)"
   - chmod 600 /tmp/travis_key
   - ssh-add /tmp/travis_key
-  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "ping" WORK/CI_CD/Ansible/playbook.yml'
-  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'ansible-playbook -i hosts.yml --tags "clone_gitrepo" WORK/CI_CD/Ansible/playbook.yml'
+  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'cd WORK/CI_CD/Ansible/; ansible-playbook -i hosts.yml --tags "ping" playbook.yml'
+  - ssh -o "StrictHostKeyChecking no" ansible@35.178.22.200 'cd WORK/CI_CD/Ansible/; ansible-playbook -i hosts.yml --tags "clone_gitrepo" playbook.yml'
   - 'sudo docker pull ${distribution}:${version}'
   - 'sudo docker build --no-cache --rm --file=travis/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible travis'
 
